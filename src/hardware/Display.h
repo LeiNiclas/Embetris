@@ -27,6 +27,7 @@ class Display {
         void drawCircle(int x, int y, int radius, Color color);
         void fillCircle(int x, int y, int radius, Color color);
         void drawText(int x, int y, uint8_t size, Color color, Color bgColor, const char* text);
+        void drawText(Color color, Color bgColor, const char* text);
 
         void clear();
 

@@ -4,6 +4,7 @@
 #include <hardware/Joystick.h>
 #include <hardware/Touchscreen.h>
 #include "utils.h"
+#include "menu/MainMenu.h"
 
 #define WAIT_TIME 1000 
 
@@ -147,18 +148,33 @@ void touchscreenTest()
 }
 
 
+MainMenu mainMenu;
+
 
 void setup()
 {
+    Serial.begin(115200);
+    while(!Serial);
     display.init();
     joystick.init();
     touchscreen.init();
+    mainMenu.initMenu();
 }
 
 
 void loop()
 {
+    static bool firstRun = true;
     // displayTest();
     // joystickTest();
-    touchscreenTest();
+    if (firstRun)
+    {
+        if (mainMenu.show(display, joystick, touchscreen, millis()))
+        {
+            firstRun = false;
+        }
+    } else 
+    {
+        touchscreenTest();
+    }
 }

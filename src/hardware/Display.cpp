@@ -23,7 +23,7 @@ namespace {
 }
 
 
-/// @brief Initialize the LCD and turn on its backlight.
+/// @brief Initializes the LCD.
 void Display::init()
 {
     config = DisplayConfig();
@@ -46,12 +46,15 @@ void Display::init()
     setBrightness(config.brightness);
 }
 
+/// @brief Updates the brigthness of the LCD screen.
 void Display::setBrightness(uint8_t brightness)
 {
     config.brightness = brightness;
     ledcWrite(LCD_LED_CHANNEL, brightness);
 }
 
+/// @brief Sets the rotation / orientation of the screen.
+/// Can only have values [0..3]
 void Display::setRotation(uint8_t rotation)
 {
     assert(rotation < 4);
@@ -60,27 +63,33 @@ void Display::setRotation(uint8_t rotation)
     tft.setRotation(rotation);
 }
 
+/// @brief Updates the default background color of all screens. 
 void Display::setBackgroundColor(Color color)
 {
     config.backgroundColor = colorTo565(color);
 }
 
+/// @brief Updates the grid color of the game screen.
 void Display::setGridColor(Color color)
 {
     config.gridColor = colorTo565(color);
 }
 
 
+/// @brief Draws a single pixel at (x, y). 
 void Display::drawPixel(int x, int y, Color color)
 {
     tft.drawPixel(x, y, colorTo565(color));
 }
 
+/// @brief Draws a line from (x1, y1) to (x2, y2).
 void Display::drawLine(int x1, int y1, int x2, int y2, Color color)
 {
     tft.drawLine(x1, y1, x2, y2, colorTo565(color));
 }
 
+/// @brief Draws a multicolored line from (x1, y1) to (x2, y2)
+/// using a specific amount of segments. More segments = higher color resolution.
 void Display::drawLine(int x1, int y1, int x2, int y2, Color col1, Color col2, uint8_t segments)
 {
     float dx = (x1 - x2) / segments;
@@ -104,26 +113,31 @@ void Display::drawLine(int x1, int y1, int x2, int y2, Color col1, Color col2, u
     }
 }
 
+/// @brief Draws a rect starting from (x, y). Outline only.
 void Display::drawRect(int x, int y, int width, int height, Color color)
 {
     tft.drawRect(x, y, width, height, colorTo565(color));
 }
 
+/// @brief Draws a filled rect starting from (x, y).
 void Display::fillRect(int x, int y, int width, int height, Color color)
 {
     tft.fillRect(x, y, width, height, colorTo565(color));
 }
 
+/// @brief Draws a circle centered at (x, y). Outline only.
 void Display::drawCircle(int x, int y, int radius, Color color)
 {
     tft.drawCircle(x, y, radius, colorTo565(color));
 }
 
+/// @brief Draws a filled circle centered at (x, y).
 void Display::fillCircle(int x, int y, int radius, Color color)
 {
     tft.fillCircle(x, y, radius, colorTo565(color));
 }
 
+/// @brief Draws text starting from (x, y).
 void Display::drawText(int x, int y, uint8_t size, Color color, Color bgColor, const char* text)
 {
     tft.setTextColor(colorTo565(color), colorTo565(bgColor), false);
@@ -131,14 +145,19 @@ void Display::drawText(int x, int y, uint8_t size, Color color, Color bgColor, c
     tft.drawString(text, x, y);
 }
 
+/// @brief Draws text starting from (x, y).
+void Display::drawText(Color color, Color bgColor, const char* text)
+{
+    tft.setTextColor(colorTo565(color), colorTo565(bgColor), false);
+    tft.drawString(text, tft.getCursorX(), tft.getCursorY());
+}
 
+
+/// @brief Clears the screen with the current background color set in the current config.
 void Display::clear()
 {
     tft.fillScreen(config.backgroundColor);
 }
 
-
-void Display::present()
-{
-    // Direct TFT drawing renders this kinda obsolete for the moment
-}
+/// @brief Obsolete at the moment. Might become necessary for sprites later on.
+void Display::present() {}

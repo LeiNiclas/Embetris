@@ -13,7 +13,7 @@ namespace {
     constexpr uint8_t FT6336_REG_P1_XH = 0x03;
 }
 
-
+/// @brief Initializes the Touchscreen.
 void Touchscreen::init()
 {
     pinMode(TOUCH_IRQ_PIN, INPUT);
@@ -27,7 +27,8 @@ void Touchscreen::init()
     Wire.begin(TOUCH_I2C_SDA_PIN, TOUCH_I2C_SCL_PIN);
 }
 
-
+/// @brief Reads the touchscreen values into the given parameters.
+/// x and y are in non-normalized coordinates, i.e. in [0, width-1] and [0, height-1]
 void Touchscreen::readValues(uint16_t &x, uint16_t &y, bool &touched)
 {
     x = 0;
@@ -65,5 +66,6 @@ void Touchscreen::readValues(uint16_t &x, uint16_t &y, bool &touched)
 
     x = ((xHigh & 0x0F) << 8) | xLow;
     y = ((yHigh & 0x0F) << 8) | yLow;
+    
     touched = true;
 }

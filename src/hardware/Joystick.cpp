@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+/// Note: The button of the joystick is currently not being used.
+
 namespace {
     constexpr int JOYSTICK_X_PIN = 2;
     constexpr int JOYSTICK_Y_PIN = 1;
@@ -15,7 +17,7 @@ namespace {
     constexpr float DOWN_THRESHOLD = -0.5f;
 }
 
-
+/// @brief Initializes the Joystick
 void Joystick::init()
 {
     pinMode(JOYSTICK_X_PIN, INPUT);
@@ -31,14 +33,16 @@ void Joystick::init()
     }
 }
 
-
+/// @brief Reads the joystick values into the given parameters.
+/// x and y are normalized, i.e. in [-1, 1)
 void Joystick::readValues(float &x, float &y, bool &buttonPressed)
 {
     int analogX = analogRead(JOYSTICK_X_PIN);
     int analogY = analogRead(JOYSTICK_Y_PIN);
     
+    // Normalization to [-1, 1)
     int mid = (JOYSTICK_MAX_VALUE + 1) / 2;
-
+    
     x = (float(analogX) / float(mid)) - 1.0f;
     y = (float(analogY) / float(mid)) - 1.0f;
 
@@ -49,7 +53,7 @@ void Joystick::readValues(float &x, float &y, bool &buttonPressed)
     runningIndex = (runningIndex + 1) % 10;
 }
 
-
+/// @brief Reads the average joystick values into x and y using the last recorded values.
 void Joystick::readAverageValues(float &x, float &y)
 {
     x = 0;
@@ -65,7 +69,7 @@ void Joystick::readAverageValues(float &x, float &y)
     y /= 10;
 }
 
-
+/// @brief Checks if the Joystick is held to the left.
 bool Joystick::isLeft()
 {
     float sum = 0;
@@ -76,7 +80,7 @@ bool Joystick::isLeft()
     return sum / 10 <= LEFT_THRESHOLD;
 }
 
-
+/// @brief Checks if the Joystick is held to the right.
 bool Joystick::isRight()
 {
     float sum = 0;
@@ -87,7 +91,7 @@ bool Joystick::isRight()
     return sum / 10 >= RIGHT_THRESHOLD;
 }
 
-
+/// @brief Checks if the Joystick is held upwards.
 bool Joystick::isUp()
 {
     float sum = 0;
@@ -98,7 +102,7 @@ bool Joystick::isUp()
     return sum / 10 >= UP_THRESHOLD;
 }
 
-
+/// @brief Checks if the Joystick is held downwards.
 bool Joystick::isDown()
 {
     float sum = 0;
